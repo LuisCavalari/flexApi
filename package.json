@@ -1,0 +1,19 @@
+{
+  "name": "flex-api",
+  "version": "1.0.0",
+  "description": "API for users control",
+  "main": "src/server.js",
+  "repository": "https://github.com/LuisCavalari/flexApi.git",
+  "author": "Luis Cavalari <lfelipe.felipe4@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.0",
+    "nodemon": "^1.19.2",
+    "path": "^0.12.7"
+  }
+}
