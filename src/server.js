@@ -3,9 +3,11 @@ const express = require('express');
 const server = express();
 server.use(express.json());
 
+require('./app/controllers/authController')(server)
+require('./app/controllers/projectController')(server)
+
 server.get('/',(request,response)=>{
     response.send();
 })
-require('./controllers/authController')(server)
 
 server.listen(3000)
