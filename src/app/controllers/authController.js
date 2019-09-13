@@ -8,7 +8,7 @@ const mailer = require('../../modules/mail')
 const router = express.Router();
 
 function generateToken(user = {}) {
-    return jwt.sign({ id: user.id }, authConfig.secret, {
+    return jwt.sign(user, authConfig.secret, {
         expiresIn: 86400,
     });
 }
@@ -24,7 +24,7 @@ router.post('/register', async (request, response) => {
 
         return response.send({
             user,
-            token: generateToken({ user }),
+            token: generateToken({ id: user.id }),
         })
     } catch (error) {
         return response.status(400).send({ error: error.message });
@@ -40,8 +40,8 @@ router.post('/authenticate', async (request, response) => {
 
     if (!await bcrypt.compare(password, user.password))
         response.status(400).send({ error: 'Invalid password' });
-
-    const token = generateToken({ user })
+    
+    const token = generateToken({ id: user.id })
 
     response.send({ user, token })
 
@@ -92,17 +92,17 @@ router.post('/reset_password', async (request, response) => {
     const { email, token, password } = request.body
     try {
         const user = await User.findOne({ email })
-        .select('+passwordResetToken passwordResetExpire');
+            .select('+passwordResetToken passwordResetExpire');
         const dateNow = new Date();
         if (!user)
             response.status(400).send({ error: 'Invalid email' })
 
         if (user.passwordResetToken != token)
-            response.status(400).send({ error: 'Invalid token'});
+            response.status(400).send({ error: 'Invalid token' });
 
         if (user.passwordResetExpire < dateNow)
             response.status(400).send({ error: 'Expired token' })
-        
+
         user.password = password
 
         await user.save()
